@@ -9,6 +9,8 @@ const PokemonLanding = (props) => {
 
   const [ searchedPokemon, setSearchedPokemon ] = useState('')
   const [ receivedPokemon, setReceivedPokemon ] = useState()
+  const [ favPokeErrorMessage, setFavPokeErrorMessage ] = useState()
+  const [ isfavAdded, setIsfavAdded ] = useState(false)
 
   const searchChangeHandler = (e) => {
     setSearchedPokemon(e.target.value)
@@ -51,14 +53,15 @@ const PokemonLanding = (props) => {
     }
     
     const requestToAPI = async (data) => {
-      console.log(data)
       try {
         const response = await axios.post(`${process.env.REACT_APP_BACKEND}/pokemon/addFavPokemon`, data)
         if(response) {
+          setIsfavAdded(true)
           console.log(response.data)
         }
       } catch (error) {
-        console.log(error)
+        setIsfavAdded(false)
+        setFavPokeErrorMessage(error.response.data.message)
       }
     }
 
@@ -66,16 +69,28 @@ const PokemonLanding = (props) => {
   }
 
   return (
-    <div>
-      <p>Search your favorite pokemon</p>
-      <div>
-        <input type='text' value={searchedPokemon} onChange={searchChangeHandler} />
-        <button onClick={searchButtonHandler}>Search</button>
+    <div className='bg-yellow-200 h-full p-8 flex flex-col gap-4'>
+      <div className='w-full flex justify-center text-xl text-red-700 font-bold'>
+        <p>Search your favorite pokemon</p>
       </div>
-      {receivedPokemon && <div>
+      <div className='flex flex-row justify-center text-sm'>
+        <input type='text' value={searchedPokemon} onChange={searchChangeHandler} className='rounded-l-md px-4 py-1' />
+        <button onClick={searchButtonHandler} className='rounded-r-md bg-red-700 text-white px-2 py-1 hover:bg-red-500'>Search</button>
+      </div>
+      {receivedPokemon && <div className='w-full flex flex-col items-center border-t-2 border-red-400 pt-4 gap-4'>
+        <div className='text-red-700'>
+          <p>Searched Pokemon</p>
+        </div>
+        <div className='flex flex-col items-center text-red-700 bg-white p-8 rounded-md shadow-lg gap-4'>
           <img src={receivedPokemon.sprites.front_default} />
           <p>{receivedPokemon.name}</p>
-          <button onClick={(e) => addFavPokemonButtonHandler(e, receivedPokemon)}>Add to Fav</button>
+          {isfavAdded ? 
+            <p>added</p>
+            :
+            <button onClick={(e) => addFavPokemonButtonHandler(e, receivedPokemon)} className='text-sm bg-red-700 px-4 py-1 text-white rounded-md hover:bg-red-500'>Add to Fav</button>
+          }
+          {favPokeErrorMessage && <p className='text-xs font-bold'>{favPokeErrorMessage}</p>}
+        </div>
         </div>
       }
     </div>

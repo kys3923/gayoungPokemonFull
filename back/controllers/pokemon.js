@@ -30,6 +30,16 @@ exports.favPokeRegister = async (req, res) => {
 
   const { pokeName, pokeId, pokeImage } = req.body
 
+  const foundPokemon = await FavPokemons.findOne({pokeId: pokeId})
+
+  if(foundPokemon) {
+    return res.status(401).json({
+      success: false,
+      message: `${pokeName} has alrady added to your favorite`
+    })
+  }
+
+
   const savedFavPokemon = await FavPokemons.create(
     {
       pokename: pokeName,
