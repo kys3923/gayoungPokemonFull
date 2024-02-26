@@ -4,6 +4,7 @@ import Header from "./components/header/header";
 import Landing from "./pages/landing/landing";
 import Register from "./pages/auth/register";
 import Login from "./pages/auth/login";
+import PokemonLanding from "./pages/pokemon/pokemonLanding";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path='/' element={<Landing />} />
         <Route path='/account/register' element={<Register />} />
         <Route path='/account/login' element={<Login />} />
+        <Route path='/pokemon' element={<PokemonLanding />} />
       </Routes>
     </Router>
   );
