@@ -18,6 +18,8 @@ const PokemonLanding = (props) => {
 
   const searchButtonHandler = (e) => {
 
+    setFavPokeErrorMessage()
+
     if(searchedPokemon == '') {
       return
     }
